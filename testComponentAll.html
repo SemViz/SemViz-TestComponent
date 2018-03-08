@@ -1,22 +1,19 @@
 <template id="testComponent-template">
-
   <div class="testComponent-container">
     I am TestComponent
   </div>
-  <script>
-    console.log('shadowcss',this);
-  </script>
   <style>
     .testComponent-container{
       background-color: red;
     }
   </style>
-
 </template>
 <script>
+console.log('template script');
 const currentDocument = document.currentScript.ownerDocument;
 class TestComponent extends HTMLElement {
   constructor() {
+    console.log('component script');
     // If you define a constructor, always call super() first as it is required by the CE spec.
     super();
 
@@ -31,7 +28,7 @@ class TestComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    console.log('ALLO');
+    //  console.log('ALLO');
    const shadowRoot = this.attachShadow({mode: 'open'});
 
    // Select the template and clone it. Finally attach the cloned node to the shadowDOM's root.
