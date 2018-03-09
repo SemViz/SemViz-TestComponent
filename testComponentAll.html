@@ -1,7 +1,11 @@
 <template id="testComponent-template">
   <div class="testComponent-container">
     I am TestComponent
+    <div id="testComponent-content">
+      and you can click me
+    </div>
   </div>
+
   <style>
     .testComponent-container{
       background-color: red;
@@ -27,6 +31,10 @@ class TestComponent extends HTMLElement {
     console.log("Element was clicked!");
   }
 
+  sayDomHello() {
+    console.log("Dom of element was clicked!");
+  }
+
   connectedCallback() {
     //  console.log('ALLO');
    const shadowRoot = this.attachShadow({mode: 'open'});
@@ -35,6 +43,9 @@ class TestComponent extends HTMLElement {
    // Current document needs to be defined to get DOM access to imported HTML
    const template = currentDocument.querySelector('#testComponent-template');
    const instance = template.content.cloneNode(true);
+   instance.querySelector('#testComponent-content').addEventListener('click', e => {
+     this.sayDomHello();
+   });
    shadowRoot.appendChild(instance);
  }
 }
