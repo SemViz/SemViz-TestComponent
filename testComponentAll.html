@@ -21,7 +21,7 @@
   </style>
 </template>
 <script>
-const currentDocument = document.currentScript.ownerDocument;
+//const currentDocument = document.currentScript.ownerDocument;
 class TestComponent extends HTMLElement {
   constructor() {
     // If you define a constructor, always call super() first as it is required by the CE spec.
@@ -43,7 +43,7 @@ class TestComponent extends HTMLElement {
 
   connectedCallback() {
    const shadowRoot = this.attachShadow({mode: 'open'});
-   const template = currentDocument.querySelector('#testComponent-template');
+   const template = document.currentScript.ownerDocument.querySelector('#testComponent-template');
    const instance = template.content.cloneNode(true);
    instance.querySelector('#testComponent-content').addEventListener('click', e => {
      this.sayDomHello();
