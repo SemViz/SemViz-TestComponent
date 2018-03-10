@@ -42,7 +42,7 @@
 
   for (let componentDependecy of componentDependecies) {
     console.log(document.querySelector('#'+componentDependecy.id));
-    if(document.querySelector('#'+componentDependecy.id)!=undefined){
+    if(document.querySelector('#'+componentDependecy.id)!=null){
       let importFile = document.createElement('link');
       importFile.rel = 'import';
       importFile.href = icomponentDependecy.url;
