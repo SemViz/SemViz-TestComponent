@@ -1,9 +1,9 @@
 <template id="testComponentContainer-template">
   <div class="testComponentContainer-container">
     I am a Container of test-component
-    <test-component></test-component>
+    <!--<test-component></test-component>-->
   </div>
-  <link rel="import" href="./testComponentAll.html">
+  <link rel="import" href="./testComponent.html">
   <style>
     .testComponentContainer-container{
       background-color: Green ;
@@ -27,9 +27,6 @@
       });
       const template = document.querySelector('#test-component').import.querySelector('#testComponent-template');
       const instance = template.content.cloneNode(true);
-      instance.querySelector('#testComponent-content').addEventListener('click', e => {
-        this.sayDomHello();
-      });
       shadowRoot.appendChild(instance);
     }
   }
