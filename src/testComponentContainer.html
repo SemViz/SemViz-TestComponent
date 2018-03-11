@@ -28,7 +28,16 @@
       const shadowRoot = this.attachShadow({
         mode: 'open'
       });
-      const template = document.querySelector('#test-component-container').import.querySelector('#testComponentContainer-template');
+      //const template = document.querySelector('#test-component-container').import.querySelector('#testComponentContainer-template');
+      const templateCandidates = document.querySelectorAll('link[rel=import]');
+      let template=null;
+      for (let templateCandidate of templateCandidates) {
+        template=templateCandidate.import.querySelector('#testComponentContainer-template')
+        if(template!=null){
+          break;
+        }
+      }
+
       const instance = template.content.cloneNode(true);
       shadowRoot.appendChild(instance);
     }
