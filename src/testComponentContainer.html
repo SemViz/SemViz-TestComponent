@@ -19,6 +19,18 @@
     constructor(postal) {
       super();
       this.postal = postal;
+      this.subscription = this.postal.subscribe({
+          channel: "main",
+          topic: "item",
+          callback: function(data, envelope) {
+              // `data` is the data published by the publisher.
+              // `envelope` is a wrapper around the data & contains
+              // metadata about the message like the channel, topic,
+              // timestamp and any other data which might have been
+              // added by the sender.
+              console.log(data,envelope);
+          }
+      });
     }
 
     connectedCallback() {

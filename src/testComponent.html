@@ -31,6 +31,7 @@
       this.addEventListener('click', e => {
         this.sayHello();
       });
+
     }
 
     sayHello() {
@@ -39,6 +40,15 @@
 
     sayDomHello() {
       console.log("Dom of element was clicked!");
+      if (this.postal != undefined) {
+        this.postal.publish({
+          channel: "main",
+          topic: "item",
+          data: {
+            message: "c'est ton voisin qui te parle",
+          }
+        });
+      }
     }
 
     connectedCallback() {
@@ -47,10 +57,10 @@
       });
       //const template = document.querySelector('#test-component').import.querySelector('#testComponent-template');
       const templateCandidates = document.querySelectorAll('link[rel=import]');
-      let template=null;
+      let template = null;
       for (let templateCandidate of templateCandidates) {
-        template=templateCandidate.import.querySelector('#testComponent-template')
-        if(template!=null){
+        template = templateCandidate.import.querySelector('#testComponent-template')
+        if (template != null) {
           break;
         }
       }
@@ -59,6 +69,7 @@
         this.sayDomHello();
       });
       shadowRoot.appendChild(instance);
+
     }
   }
 
