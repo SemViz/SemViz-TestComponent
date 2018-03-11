@@ -32,6 +32,7 @@
       const templateCandidates = document.querySelectorAll('link[rel=import]');
       let template=null;
       for (let templateCandidate of templateCandidates) {
+        console.log(templateCandidate);
         template=templateCandidate.import.querySelector('#testComponentContainer-template')
         if(template!=null){
           break;
