@@ -43,10 +43,12 @@
   for (let componentDependecy of componentDependecies) {
     console.log(document.querySelector('#'+componentDependecy.id));
     if(document.querySelector('#'+componentDependecy.id)!=null){
+      console.log('ALLO');
       let importFile = document.createElement('link');
       importFile.rel = 'import';
       importFile.href = icomponentDependecy.url;
       importFile.id = componentDependecy.id;
+      console.log(importFile);
       document.head.appendChild(importFile);
     }
   }
