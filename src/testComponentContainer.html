@@ -27,12 +27,14 @@
       });
       //const template = document.querySelector('#test-component-container').import.querySelector('#testComponentContainer-template');
       const templateCandidates = document.querySelectorAll('link[rel=import]');
-      let template=null;
+      let template = null;
       for (let templateCandidate of templateCandidates) {
         console.log(templateCandidate);
-        template=templateCandidate.import.querySelector('#testComponentContainer-template')
-        if(template!=null){
-          break;
+        if (templateCandidate.import != undefined) {
+          template = templateCandidate.import.querySelector('#testComponentContainer-template')
+          if (template != null) {
+            break;
+          }
         }
       }
 
@@ -41,16 +43,14 @@
     }
   }
 
-  let componentDependecies=[
-    {
-      url:'https://raw.githubusercontent.com/assemblee-virtuelle/SemViz-TestComponent/master/src/testComponent.html',
-      id:'test-component'
-    }
-  ]
+  let componentDependecies = [{
+    url: 'https://raw.githubusercontent.com/assemblee-virtuelle/SemViz-TestComponent/master/src/testComponent.html',
+    id: 'test-component'
+  }]
 
   for (let componentDependecy of componentDependecies) {
-    console.log(document.querySelector('#'+componentDependecy.id));
-    if(document.querySelector('#'+componentDependecy.id)==null){
+    console.log(document.querySelector('#' + componentDependecy.id));
+    if (document.querySelector('#' + componentDependecy.id) == null) {
       //console.log('ALLO');
       let importFile = document.createElement('link');
       importFile.rel = 'import';
