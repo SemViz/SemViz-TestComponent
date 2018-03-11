@@ -2,6 +2,8 @@
   <div class="testComponentContainer-container">
     I am a Container of test-component
     <test-component></test-component>
+    <div id="message">
+    </div>
   </div>
   <style>
     .testComponentContainer-container{
@@ -29,12 +31,13 @@
               // timestamp and any other data which might have been
               // added by the sender.
               console.log(data,envelope);
+              this.shadowRoot.querySelector('#message').innerHTML=data.message;
           }
       });
     }
 
     connectedCallback() {
-      const shadowRoot = this.attachShadow({
+      this.shadowRoot = this.attachShadow({
         mode: 'open'
       });
       //const template = document.querySelector('#test-component-container').import.querySelector('#testComponentContainer-template');
