@@ -13,7 +13,7 @@
   </style>
 </template>
 <script>
-  console.log(document.currentScript);
+  //console.log(document.currentScript);
   //document.currentScript.ownerDocument;
   class testComponentContainer extends HTMLElement {
     constructor(postal) {
@@ -43,23 +43,15 @@
     }
   }
 
-  let componentDependecies = [{
-    url: 'https://raw.githubusercontent.com/assemblee-virtuelle/SemViz-TestComponent/master/src/testComponent.html',
-    id: 'test-component'
-  }]
-
-  for (let componentDependecy of componentDependecies) {
-    console.log(document.querySelector('#' + componentDependecy.id));
-    if (document.querySelector('#' + componentDependecy.id) == null) {
-      //console.log('ALLO');
-      let importFile = document.createElement('link');
-      importFile.rel = 'import';
-      importFile.href = componentDependecy.url;
-      importFile.id = componentDependecy.id;
-      //console.log(importFile);
-      document.head.appendChild(importFile);
-    }
+  if (document.querySelector('link[href="https://raw.githubusercontent.com/assemblee-virtuelle/SemViz-TestComponent/master/src/testComponent.html"]') == null) {
+    //console.log('ALLO');
+    let importFile = document.createElement('link');
+    importFile.rel = 'import';
+    importFile.href = 'https://raw.githubusercontent.com/assemblee-virtuelle/SemViz-TestComponent/master/src/testComponent.html';
+    //console.log(importFile);
+    document.head.appendChild(importFile);
   }
+
 
   customElements.define('test-component-container', testComponentContainer);
 </script>
