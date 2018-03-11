@@ -32,7 +32,7 @@
               // added by the sender.
               console.log(data,envelope);
               this.shadowRoot.querySelector('#message').innerHTML=data.message;
-          }
+          }.bind(this)
       });
     }
 
