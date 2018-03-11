@@ -37,7 +37,7 @@
     }
 
     connectedCallback() {
-      this.shadowRoot = this.attachShadow({
+      const shadowRoot = this.attachShadow({
         mode: 'open'
       });
       //const template = document.querySelector('#test-component-container').import.querySelector('#testComponentContainer-template');
