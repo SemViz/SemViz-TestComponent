@@ -42,8 +42,8 @@
       shadowRoot.appendChild(instance);
     }
   }
-
-  if (document.querySelector('link[href="https://raw.githubusercontent.com/assemblee-virtuelle/SemViz-TestComponent/master/src/testComponent.html"]') == null) {
+  if(customElements.get('test-component')==undefined){
+  //if (document.querySelector('link[href="https://raw.githubusercontent.com/assemblee-virtuelle/SemViz-TestComponent/master/src/testComponent.html"]') == null) {
     //console.log('ALLO');
     let importFile = document.createElement('link');
     importFile.rel = 'import';
