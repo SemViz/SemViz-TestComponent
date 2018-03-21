@@ -59,11 +59,11 @@
   }
   //console.log(customElements,customElements.get('test-component'));
   //if(customElements.get('test-component')==undefined){
-  if (document.querySelector('link[href="https://raw.githubusercontent.com/assemblee-virtuelle/SemViz-TestComponent/master/src/testComponent.html"]') == null) {
+  if (document.querySelector('link[href="https://raw.githubusercontent.com/SemViz/SemViz-TestComponent/master/src/testComponent.html"]') == null) {
     //console.log('ALLO');
     let importFile = document.createElement('link');
     importFile.rel = 'import';
-    importFile.href = 'https://semviz.github.io/SemViz/SemViz-TestComponent/master/src/testComponent.html';
+    importFile.href = 'https://raw.githubusercontent.com/SemViz/SemViz-TestComponent/master/src/testComponent.html';
     //console.log(importFile);
     document.head.appendChild(importFile);
   }
