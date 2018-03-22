@@ -17,7 +17,7 @@
     console.log('INNER SCRIPT for testComponentContainer');
   </script>
   <% for (var index in htmlWebpackPlugin.files.js) { %>
-  <script src="<%= htmlWebpackPlugin.files.js[index] %>"></script>
+  <script src="https://rawgit.com/SemViz/SemViz-TestComponent/master/public/testComponentContainer/<%= htmlWebpackPlugin.files.js[index] %>"></script>
   <% } %>
 </template>
 <script>

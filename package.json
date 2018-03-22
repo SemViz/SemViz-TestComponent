@@ -6,7 +6,8 @@
     "build": "webpack",
     "prebuild": "rimraf public",
     "start" : "http-server",
-    "prestart" : "npm run build"
+    "prestart" : "npm run build",
+    "buildGit" : "git add -A && git commit -m \"build for rawgit\" && git push"
   },
   "repository": {
     "type": "git",
