@@ -1,1 +1,1 @@
-console.log('OUTER SCRIPT');
+console.log('OUTER SCRIPT for tesComponent');
