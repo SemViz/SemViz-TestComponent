@@ -1,0 +1,78 @@
+
+<template id="testComponentContainer-template">
+  <div class="testComponentContainer-container">
+    I am a Container of test-component
+    <test-component></test-component>
+    <div id="message">
+    </div>
+  </div>
+  <style>
+    .testComponentContainer-container{
+      background-color: Green ;
+      margin: 5px;
+      padding: 5px;
+    }
+  </style>
+  <script>
+    console.log('INNER SCRIPT for testComponentContainer');
+  </script>
+  
+  <script src="front.851e021424920379b8ce.js"></script>
+  
+</template>
+<script>
+  //console.log(document.currentScript);
+  //document.currentScript.ownerDocument;
+  class testComponentContainer extends HTMLElement {
+    constructor(postal) {
+      super();
+      this.postal = postal;
+      this.subscription = this.postal.subscribe({
+          channel: "main",
+          topic: "item",
+          callback: function(data, envelope) {
+              // `data` is the data published by the publisher.
+              // `envelope` is a wrapper around the data & contains
+              // metadata about the message like the channel, topic,
+              // timestamp and any other data which might have been
+              // added by the sender.
+              console.log(data,envelope);
+              this.shadowRoot.querySelector('#message').innerHTML=data.message;
+          }.bind(this)
+      });
+    }
+
+    connectedCallback() {
+      const shadowRoot = this.attachShadow({
+        mode: 'open'
+      });
+      //const template = document.querySelector('#test-component-container').import.querySelector('#testComponentContainer-template');
+      const templateCandidates = document.querySelectorAll('link[rel=import]');
+      let template = null;
+      for (let templateCandidate of templateCandidates) {
+        console.log(templateCandidate);
+        if (templateCandidate.import != undefined) {
+          template = templateCandidate.import.querySelector('#testComponentContainer-template')
+          if (template != null) {
+            break;
+          }
+        }
+      }
+
+      const instance = template.content.cloneNode(true);
+      shadowRoot.appendChild(instance);
+    }
+  }
+  //console.log(customElements,customElements.get('test-component'));
+  //if(customElements.get('test-component')==undefined){
+  if (document.querySelector('link[href="https://raw.githubusercontent.com/SemViz/SemViz-TestComponent/master/src/testComponent.html"]') == null) {
+    //console.log('ALLO');
+    let importFile = document.createElement('link');
+    importFile.rel = 'import';
+    importFile.href = 'https://raw.githubusercontent.com/SemViz/SemViz-TestComponent/master/src/testComponent.html';
+    //console.log(importFile);
+    document.head.appendChild(importFile);
+  }
+
+  customElements.define('test-component-container', testComponentContainer);
+</script>

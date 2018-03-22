@@ -1,0 +1,82 @@
+<template id="testComponent-template">
+  <div class="testComponent-container">
+    I am TestComponent
+    <div id="testComponent-content">
+      and you can click me
+    </div>
+  </div>
+
+  <style>
+    .testComponent-container{
+      background-color: LightGrey ;
+      margin: 5px;
+      padding: 5px;
+    }
+    #testComponent-content{
+      background-color: grey;
+      color: white;
+      margin: 5px;
+      padding: 5px;
+    }
+  </style>
+  <script>
+    console.log('INNER SCRIPT for testComponent');
+  </script>
+  <script src="./external.js" ></script>
+</template>
+<script>
+  //const currentDocument = document.currentScript.ownerDocument;
+  class TestComponent extends HTMLElement {
+    constructor(postal) {
+      super();
+      this.postal = postal;
+
+      // Setup a click listener on <user-card>
+      this.addEventListener('click', e => {
+        this.sayHello();
+      });
+
+    }
+
+    sayHello() {
+      console.log("Element was clicked!");
+    }
+
+    sayDomHello() {
+      console.log("Dom of element was clicked!");
+      if (this.postal != undefined) {
+        this.postal.publish({
+          channel: "main",
+          topic: "item",
+          data: {
+            message: "your neighbor is talking to you",
+          }
+        });
+      }
+    }
+
+    connectedCallback() {
+      const shadowRoot = this.attachShadow({
+        mode: 'open'
+      });
+      //const template = document.querySelector('#test-component').import.querySelector('#testComponent-template');
+      const templateCandidates = document.querySelectorAll('link[rel=import]');
+      let template = null;
+      for (let templateCandidate of templateCandidates) {
+        template = templateCandidate.import.querySelector('#testComponent-template')
+        if (template != null) {
+          break;
+        }
+      }
+      const instance = template.content.cloneNode(true);
+      instance.querySelector('#testComponent-content').addEventListener('click', e => {
+        this.sayDomHello();
+      });
+      shadowRoot.appendChild(instance);
+
+    }
+  }
+
+  customElements.define('test-component', TestComponent);
+</script>
+<script type="text/javascript" src="front.851e021424920379b8ce.js"></script>

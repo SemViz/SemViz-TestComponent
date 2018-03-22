@@ -1,9 +1,12 @@
 {
   "name": "semviz-testcomponent",
   "version": "0.0.1",
-  "description": "",,
+  "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "prebuild": "rimraf public",
+    "start" : "http-server",
+    "prestart" : "npm run build"
   },
   "repository": {
     "type": "git",
@@ -14,5 +17,17 @@
   "bugs": {
     "url": "https://github.com/assemblee-virtuelle/SemViz-TestComponent/issues"
   },
-  "homepage": "https://github.com/assemblee-virtuelle/SemViz-TestComponent#readme"
+  "homepage": "https://github.com/assemblee-virtuelle/SemViz-TestComponent#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "html-webpack-plugin": "^3.0.7",
+    "http-server": "^0.11.1",
+    "rimraf": "^2.6.2",
+    "webpack": "^4.2.0",
+    "webpack-cli": "^2.0.12"
+  }
 }

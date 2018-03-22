@@ -1,3 +1,4 @@
+
 <template id="testComponentContainer-template">
   <div class="testComponentContainer-container">
     I am a Container of test-component
@@ -12,7 +13,12 @@
       padding: 5px;
     }
   </style>
-
+  <script>
+    console.log('INNER SCRIPT for testComponentContainer');
+  </script>
+  <% for (var index in htmlWebpackPlugin.files.js) { %>
+  <script src="<%= htmlWebpackPlugin.files.js[index] %>"></script>
+  <% } %>
 </template>
 <script>
   //console.log(document.currentScript);
@@ -67,7 +73,6 @@
     //console.log(importFile);
     document.head.appendChild(importFile);
   }
-
 
   customElements.define('test-component-container', testComponentContainer);
 </script>
