@@ -22,7 +22,9 @@
   <script>
     console.log('INNER SCRIPT for testComponent');
   </script>
-  <script src="./external.js" ></script>
+  <% for (var index in htmlWebpackPlugin.files.js) { %>
+  <script src="https://rawgit.com/SemViz/SemViz-TestComponent/master/public/testComponent/<%= htmlWebpackPlugin.files.js[index] %>"></script>
+  <% } %>
 </template>
 <script>
   //const currentDocument = document.currentScript.ownerDocument;

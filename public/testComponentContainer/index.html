@@ -65,11 +65,12 @@
   }
   //console.log(customElements,customElements.get('test-component'));
   //if(customElements.get('test-component')==undefined){
-  if (document.querySelector('link[href="https://raw.githubusercontent.com/SemViz/SemViz-TestComponent/master/src/testComponent.html"]') == null) {
+  var componentUrl="https://rawgit.com/SemViz/SemViz-TestComponent/master/public/testComponent.html"
+  if (document.querySelector('link[href="'+componentUrl+'"]') == null) {
     //console.log('ALLO');
     let importFile = document.createElement('link');
     importFile.rel = 'import';
-    importFile.href = 'https://raw.githubusercontent.com/SemViz/SemViz-TestComponent/master/src/testComponent.html';
+    importFile.href = componentUrl;
     //console.log(importFile);
     document.head.appendChild(importFile);
   }
