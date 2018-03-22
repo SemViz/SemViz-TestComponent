@@ -7,7 +7,8 @@
     "prebuild": "rimraf public",
     "start" : "http-server",
     "prestart" : "npm run build",
-    "buildGit" : "git add -A && git commit -m \"build for rawgit\" && git push"
+    "buildGit" : "git add -A && git commit -m \"build for rawgit\" && git push",
+    "prebuildGit" : "npm run build"
   },
   "repository": {
     "type": "git",
