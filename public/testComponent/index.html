@@ -1,4 +1,4 @@
-<template id="testComponent-template">
+<template>
   <div class="testComponent-container">
     I am TestComponent
     <div id="testComponent-content">
@@ -20,10 +20,10 @@
     }
   </style>
   <script>
-    console.log('INNER SCRIPT for testComponent');
+    //console.log('INNER SCRIPT for testComponent');
   </script>
   
-  <script src="https://rawgit.com/SemViz/SemViz-TestComponent/master/public/testComponent/front.f91f772b25fd7f33cf8d.js"></script>
+  <script src="./front.af598cf47a9d6ed7da9c.js"></script>
   
 </template>
 <script>
@@ -32,14 +32,18 @@
     constructor(postal) {
       super();
       this.postal = postal;
-
       // Setup a click listener on <user-card>
       this.addEventListener('click', e => {
         this.sayHello();
       });
-
+      this.subscriptions = [];
     }
-
+    // setChannel(channel) {
+    //   this.channel = channel;
+    //   this.subscriptions.push(channel.subscribe("message/item/dislpay", (data, envelope) => {
+    //     console.log('MESSAGE SUBSCRIBE');
+    //   }));
+    // }
     sayHello() {
       console.log("Element was clicked!");
     }
@@ -56,28 +60,5 @@
         });
       }
     }
-
-    connectedCallback() {
-      const shadowRoot = this.attachShadow({
-        mode: 'open'
-      });
-      //const template = document.querySelector('#test-component').import.querySelector('#testComponent-template');
-      const templateCandidates = document.querySelectorAll('link[rel=import]');
-      let template = null;
-      for (let templateCandidate of templateCandidates) {
-        template = templateCandidate.import.querySelector('#testComponent-template')
-        if (template != null) {
-          break;
-        }
-      }
-      const instance = template.content.cloneNode(true);
-      instance.querySelector('#testComponent-content').addEventListener('click', e => {
-        this.sayDomHello();
-      });
-      shadowRoot.appendChild(instance);
-
-    }
   }
-
-  customElements.define('test-component', TestComponent);
 </script>

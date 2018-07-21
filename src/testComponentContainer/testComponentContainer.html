@@ -1,5 +1,6 @@
+<template>
+  <web-component-link url="https://rawgit.com/SemViz/SemViz-TestComponent/master/public/testComponent/" main="index.html" tag="test-component" class="TestComponent"></web-component-link>
 
-<template id="testComponentContainer-template">
   <div class="testComponentContainer-container">
     I am a Container of test-component
     <test-component></test-component>
@@ -14,66 +15,41 @@
     }
   </style>
   <script>
-    console.log('INNER SCRIPT for testComponentContainer');
+    //console.log('INNER SCRIPT for testComponentContainer');
   </script>
   <% for (var index in htmlWebpackPlugin.files.js) { %>
-  <script src="https://rawgit.com/SemViz/SemViz-TestComponent/master/public/testComponentContainer/<%= htmlWebpackPlugin.files.js[index] %>"></script>
+  <script src="./<%= htmlWebpackPlugin.files.js[index] %>"></script>
   <% } %>
 </template>
 <script>
-  //console.log(document.currentScript);
-  //document.currentScript.ownerDocument;
   class testComponentContainer extends HTMLElement {
     constructor(postal) {
       super();
       this.postal = postal;
-      this.subscription = this.postal.subscribe({
+      if (this.postal != undefined) {
+        this.subscription = this.postal.subscribe({
           channel: "main",
           topic: "item",
           callback: function(data, envelope) {
-              // `data` is the data published by the publisher.
-              // `envelope` is a wrapper around the data & contains
-              // metadata about the message like the channel, topic,
-              // timestamp and any other data which might have been
-              // added by the sender.
-              console.log(data,envelope);
-              this.shadowRoot.querySelector('#message').innerHTML=data.message;
+            // `data` is the data published by the publisher.
+            // `envelope` is a wrapper around the data & contains
+            // metadata about the message like the channel, topic,
+            // timestamp and any other data which might have been
+            // added by the sender.
+            console.log(data, envelope);
+            this.shadowRoot.querySelector('#message').innerHTML = data.message;
           }.bind(this)
-      });
-    }
-
-    connectedCallback() {
-      const shadowRoot = this.attachShadow({
-        mode: 'open'
-      });
-      //const template = document.querySelector('#test-component-container').import.querySelector('#testComponentContainer-template');
-      const templateCandidates = document.querySelectorAll('link[rel=import]');
-      let template = null;
-      for (let templateCandidate of templateCandidates) {
-        console.log(templateCandidate);
-        if (templateCandidate.import != undefined) {
-          template = templateCandidate.import.querySelector('#testComponentContainer-template')
-          if (template != null) {
-            break;
-          }
-        }
+        });
       }
+      this.subscriptions = [];
+    }
 
-      const instance = template.content.cloneNode(true);
-      shadowRoot.appendChild(instance);
+    setChannel(channel) {
+      this.channel = channel;
+      this.subscriptions.push(channel.subscribe("message/item/dislpay", (data, envelope) => {
+        console.log('MESSAGE SUBSCRIBE');
+        this.shadowRoot.querySelector('#message').innerHTML = data.node.text;
+      }));
     }
   }
-  //console.log(customElements,customElements.get('test-component'));
-  //if(customElements.get('test-component')==undefined){
-  var componentUrl="https://rawgit.com/SemViz/SemViz-TestComponent/master/public/testComponent/index.html"
-  if (document.querySelector('link[href="'+componentUrl+'"]') == null) {
-    //console.log('ALLO');
-    let importFile = document.createElement('link');
-    importFile.rel = 'import';
-    importFile.href = componentUrl;
-    //console.log(importFile);
-    document.head.appendChild(importFile);
-  }
-
-  customElements.define('test-component-container', testComponentContainer);
 </script>

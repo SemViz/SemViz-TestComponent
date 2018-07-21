@@ -5,10 +5,10 @@
   "scripts": {
     "build": "webpack",
     "prebuild": "rimraf public",
-    "start" : "http-server",
-    "prestart" : "npm run build",
-    "buildGit" : "git add -A && git commit -m \"build for rawgit\" && git push",
-    "prebuildGit" : "npm run build"
+    "start": "http-server -p 8082 --cors",
+    "prestart": "npm run build",
+    "buildGit": "git add -A && git commit -m \"build for rawgit\" && git push",
+    "prebuildGit": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -20,15 +20,24 @@
     "url": "https://github.com/assemblee-virtuelle/SemViz-TestComponent/issues"
   },
   "homepage": "https://github.com/assemblee-virtuelle/SemViz-TestComponent#readme",
-  "dependencies": {},
+  "dependencies": {
+    "dot-prop": "^4.2.0",
+    "jquery": "^3.3.1",
+    "jstree": "^3.3.5",
+    "sift": "^6.0.0"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.0.7",
     "http-server": "^0.11.1",
     "rimraf": "^2.6.2",
+    "style-loader": "^0.21.0",
+    "url-loader": "^1.0.1",
     "webpack": "^4.2.0",
     "webpack-cli": "^2.0.12"
   }
