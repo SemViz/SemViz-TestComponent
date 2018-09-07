@@ -16,7 +16,7 @@ export default class SkosTreeSV extends HTMLElement {
     this.channel = channel;
     this.subscriptions.push(channel.subscribe("tree/items/set", (data, envelope) => {
       //console.log('table/skos/filter', data);
-      this.data = data['@graph'];
+      this.data = data;
       this.renderTree();
       this.stopLoading();
     }));
@@ -30,7 +30,7 @@ export default class SkosTreeSV extends HTMLElement {
     if (this.jstree != undefined && this.channel != undefined) {
       //console.log('ALLO1');
       this.jstree.on("select_node.jstree", (e, node) => {
-        console.log('SELECT', node);
+        //console.log('SELECT', node);
         this.channel.publish('tree/item/select', {
           concept: [node.node.data]
         })

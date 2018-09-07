@@ -24,7 +24,16 @@
     "dot-prop": "^4.2.0",
     "jquery": "^3.3.1",
     "jstree": "^3.3.5",
-    "sift": "^6.0.0"
+    "rdf-ext": "^1.1.0",
+    "rdf-fetch-lite": "^1.1.2",
+    "rdf-formats-common": "^1.4.0",
+    "rdf-parser-n3": "^1.1.1",
+    "rdf-parser-rdfxml": "^0.3.1",
+    "rdf-transform-triple-to-quad": "^1.0.1",
+    "rdflib": "^0.17.0",
+    "readable-stream": "^3.0.2",
+    "sift": "^6.0.0",
+    "string-to-stream": "^1.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
