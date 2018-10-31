@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import 'jstree';
-import 'jstree/dist/themes/default/style.min.css';
+import jstree from 'jstree';
+import jstreeCSS from 'jstree/dist/themes/default/style.css';
 import sift from 'sift'
 
 export default class SkosTreeSV extends HTMLElement {
@@ -15,8 +15,11 @@ export default class SkosTreeSV extends HTMLElement {
     //console.log('setChannel');
     this.channel = channel;
     this.subscriptions.push(channel.subscribe("tree/items/set", (data, envelope) => {
-      //console.log('table/skos/filter', data);
-      this.data = data;
+      //console.log('tree/items/set', data);
+      this.data = data.data;
+      data.webTripleStore.getALL().then(ontology => {
+        console.log("ontology", ontology);
+      });
       this.renderTree();
       this.stopLoading();
     }));
@@ -37,70 +40,70 @@ export default class SkosTreeSV extends HTMLElement {
       });
     }
   }
-  buildJsTree(sourceList, pool) {
-
+  buildJsTreeRoot(sourceList) {
+    let tree = this.buildJsTree(
+      sourceList.filter(r => r['http://www.w3.org/2004/02/skos/core#broader'] == undefined),
+      sourceList.filter(r => r['http://www.w3.org/2004/02/skos/core#broader'] != undefined)
+    );
+    //console.log(tree);
+    return tree;
+  }
+  buildJsTree(sourceList, pool, isNotFirst) {
     let nodeList = [];
-    while (sourceList.length > 0) {
-      let item = sourceList.shift();
-      pool = sift({
-        '@id': {
-          $ne: item['@id']
-        }
-      }, pool);
+    for (let item of sourceList) {
       let node = {
-        text: item.prefLabel,
+        text: item['http://www.w3.org/2004/02/skos/core#prefLabel'],
         data: item,
         children: []
       }
-
-      let children = sift({
-        broader: item['@id']
-      }, pool);
-
-      let buildTreeResult = this.buildJsTree(children, pool)
-      node.children = buildTreeResult.tree;
-      pool = buildTreeResult.pool;
-
+      let children = pool.filter(r => r['http://www.w3.org/2004/02/skos/core#broader']['@id'] == item['@id']);
+      pool = sift({
+          '@id': {
+            '$nin': children.map(r => r['@id'])
+          }
+        },
+        pool
+      );
+      if (children.length > 0) {
+        node.children = this.buildJsTree(children, pool, true);
+      } else {
+        node.children = [];
+      }
       nodeList.push(node);
-      sourceList = sift({
-        '@id': {
-          '$in': pool.map(r => r['@id'])
-        }
-      }, sourceList);
-
     }
-
-    // for (let child of children) {//   node.children.push(this.buildJsTree(child));
-    // }
-    //console.log('BUILD4', node);
-    return {
-      tree: nodeList,
-      pool: pool
-    };
+    return nodeList;
   }
 
   renderTree() {
     if (this.jstree && this.data) {
 
-      let nodeGraph = this.buildJsTree(this.data, this.data);
+      let nodeGraph = this.buildJsTreeRoot(this.data);
 
-      this.jstree.jstree(true).settings.core.data = nodeGraph.tree;
+      this.jstree.jstree(true).settings.core.data = nodeGraph;
       this.jstree.jstree(true).refresh();
     }
 
   }
 
-  startLoading(){
+  startLoading() {
     this.shadowRoot.querySelector('.loader').classList.remove('hide');
   }
-  stopLoading(){
+  stopLoading() {
     //console.log('STOP LOADING');
     this.shadowRoot.querySelector('.loader').classList.add('hide');
   }
 
   connectedCallback() {
+    let properties = this.querySelectorAll('property');
+    // console.log("jstree", jstree);
+    // console.log("jstreeCSS", jstreeCSS.toString());
 
+    //console.log(properties);
     $(() => {
+      const jsTreeStyle = document.createElement('style');
+      jsTreeStyle.type = 'text/css';
+      jsTreeStyle.appendChild(document.createTextNode(jstreeCSS.toString()))
+      $(this.shadowRoot).append(jsTreeStyle);
       $(this.shadowRoot).find('#container').jstree({
         'core': {
           //data: treeData,

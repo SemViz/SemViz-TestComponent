@@ -65,7 +65,11 @@ module.exports = [{
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: [{
+          loader: 'to-string-loader'
+        }, {
+          loader: 'css-loader'
+        }]
       }, {
         test: /\.(png|jp(e*)g|svg|gif)$/,
         use: [{
@@ -82,7 +86,7 @@ module.exports = [{
     inject: false,
     template: 'src/skosTreeSV/index.html',
   })]
-},{
+}, {
   entry: {
     webComponentClass: './src/semanticTableSV/index.js',
   },
@@ -119,7 +123,7 @@ module.exports = [{
     inject: false,
     template: 'src/semanticTableSV/index.html',
   })]
-},{
+}, {
   entry: {
     webComponentClass: './src/semanticFormSV/index.js',
   },

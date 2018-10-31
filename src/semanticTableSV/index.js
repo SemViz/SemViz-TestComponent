@@ -16,17 +16,19 @@ export default class SemantiTableSV extends HTMLElement {
   constructor() {
     super();
     this.subscriptions = [];
-    this.cols = ['title', 'label.@value', 'website'];
+    this.cols = ['title', 'http://www.w3.org/2000/01/rdf-schema#label', 'website'];
     this.taxonomyFilter = [];
   }
+
+
 
   setChannel(channel) {
 
     // let formats = new rdfExt.Parsers({
     //   'text/turtle': N3Parser
     // })
-    let formats = formatsCommon();
-    console.log('parsers', formats.parsers);
+
+    //    console.log('parsers', formats.parsers);
 
     this.channel = channel;
     // this.subscriptions.push(channel.subscribe("table/skos/filter", (data, envelope) => {
@@ -36,126 +38,26 @@ export default class SemantiTableSV extends HTMLElement {
     // }));
     this.subscriptions.push(channel.subscribe("table/items/set", (data, envelope) => {
       //console.log('table/skos/filter', data);
-      this.data = data;
-      this.renderTable();
-      this.stopLoading();
+      console.log('table/items/set',data);
+      this.data = data.data;
+      let ontology;
+      data.webTripleStore.getALL().then(ontology=>{
+        console.log(ontology);
+        this.renderTable();
+        this.stopLoading();
+      }).catch(e=>{
+        console.error(e);
+      })
+
     }));
+
+
     this.subscriptions.push(channel.subscribe("table/ontology/set", (data, envelope) => {
-      //console.log('Ontology', data);
-      for (let key in data) {
-        let value = data[key];
+      // this.resolveSemanticContext(data).then(results => {
+      //   console.log(results);
+      // });
+      console.log('Ontology', data);
 
-        if (typeof(value) == 'string' || value instanceof String) {
-          //console.log(value, value.indexOf("@base"));
-          if (key.indexOf("@base") == -1) {
-            //console.log('fetch ontology', value);
-            //'https://cors.io/?https://api.webuntis.dk/api/status';
-            let corsUrl = 'https://cors-anywhere.herokuapp.com/' + value;
-            //console.log(corsUrl);
-            let contentType;
-            fetch(corsUrl, {
-                method: 'GET',
-                //mode: 'no-cors',
-                mode: 'cors',
-              })
-              .then(function(response) {
-                //console.log('Ontology response',response,response.text());
-                //console.log('Content-Type',value,response.headers.get('Content-Type'));
-                let contentTypeFull = response.headers.get('Content-Type');
-                //let splitIndex = contentTypeFull.split(';')
-                contentType = contentTypeFull.split(';')[0];
-                return response.text();
-              })
-              .then((data) => {
-                //console.log('Ontology response',value,contentType, data);
-                let parser = formats.parsers[contentType];
-                let quads = [];
-                // let quadStream = new Readable({
-                //   objectMode: true,
-                //   read: () => {}
-                // });
-                //let quadStream = new Readable();
-                if (parser != undefined) {
-                  //let quadStream =
-                  // let iteration2=0;
-                  let quadStream = parser.import(stringToStream(data));
-                  quadStream.on('data', (quad) => {
-                    //console.log('tripleToQuad data',quad);
-                  })
-                  let serializerJsonLd = formats.serializers['application/ld+json'];
-                  let jsonLdStream = serializerJsonLd.import(quadStream);
-                  let jsonLdString = "";
-                  jsonLdStream.on('data', (data) => {
-                    jsonLdString = jsonLdString.concat(data);
-                    // console.log('streamJsonLD data',JSON.parse(data));
-                  }).on('end', () => {
-                    let jsonLdObjet = JSON.parse(jsonLdString)
-                    console.log('JsonLd Ontology', value,contentType, jsonLdObjet);
-                  }).on('error', () => {
-                    console.log('ERROR');
-                  })
-                } else {
-                  if (contentType == 'application/rdf+xml') {
-
-                    let RDFparser = new RdfXmlParser();
-
-                    let tripleToQuad = new TripleToQuadTransform();
-
-                    // let quads = [];
-                    // tripleToQuad.on('data', (quad) => {
-                    //   quads.push(quad)
-                    // }).on('end', () => {
-                    //   //console.log('tripleToQuad end',quads);
-                    //
-                    // })
-
-                    let serializerJsonLd = formats.serializers['application/ld+json'];
-                    let jsonLdStream = serializerJsonLd.import(tripleToQuad);
-                    let jsonLdString = "";
-                    jsonLdStream.on('data', (data) => {
-                      jsonLdString = jsonLdString.concat(data);
-                      //console.log('streamJsonLD data', JSON.parse(data));
-                    }).on('end', () => {
-                      let jsonLdObjet = JSON.parse(jsonLdString)
-                      console.log('JsonLd Ontology', value,contentType, jsonLdObjet);
-                    }).on('error', (err) => {
-                      console.log('ERROR',err);
-                    })
-
-
-                    RDFparser.stream(data).on('data', (triple) => {
-                      let newTriple={};
-                      let object={};
-                      object.value= triple.object.nominalValue;
-                      if(triple.object.datatype!=undefined){
-                        object.datatype={value:triple.object.datatype.nominalValue}
-                      }
-                      if(triple.object.language!=undefined){
-                        object.language=triple.language;
-                      }
-                      newTriple.object=object;
-                      newTriple.predicate={value:triple.predicate.nominalValue};
-                      newTriple.subject={value:triple.subject.nominalValue};
-                      //jsonLdString = jsonLdString.concat(data);
-                      // console.log('tripleToQuad triple',triple,newTriple);
-                      tripleToQuad.write(newTriple);
-                    }).on('readable', () => {
-                      tripleToQuad.end();
-                    })
-
-
-                  } else {
-                    console.warn('No parser for contentType', value, contentType);
-                  }
-                }
-              })
-              .catch(function(error) {
-                console.error('Request failed', value, error)
-              });
-          }
-
-        }
-      }
 
     }));
     this.subscriptions.push(channel.subscribe("table/items/loading", (data, envelope) => {
@@ -206,9 +108,15 @@ export default class SemantiTableSV extends HTMLElement {
       tr.item = record;
       for (let col of this.cols) {
 
-        //console.log('dotProp.get(record, col)',dotProp.get(record, col),record,col);
+        console.log('dotProp.get(record, col)',dotProp.get(record, col.replace(/\./g, '\\.')),record,col.replace(/\./g, '\\.'));
+        let displayValue= dotProp.get(record, col.replace(/\./g, '\\.'));
+        if(displayValue!=undefined &&  !(typeof(displayValue) == 'string' || displayValue instanceof String)){
+          if(displayValue['@value']!=undefined){
+            displayValue=displayValue['@value'];
+          }
+        }
         let td = document.createElement("td");
-        let text = document.createTextNode(dotProp.get(record, col));
+        let text = document.createTextNode(displayValue);
         td.appendChild(text);
         tr.appendChild(td);
       }
